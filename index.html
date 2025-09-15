@@ -21,9 +21,8 @@
         :root {
             --background-color: #1a1a1d;
             --text-color: #e0e0e0;
-            /* -- NEW THEME COLOR -- */
             --primary-accent: rgb(219, 230, 185);
-            --secondary-accent: #a9cce3; /* Kept for contrast */
+            --secondary-accent: #a9cce3;
             --card-background: rgba(44, 44, 46, 0.4);
             --card-border: rgba(255, 255, 255, 0.1);
         }
@@ -47,7 +46,7 @@
         }
 
         .container {
-            max-width: 1100px; 
+            max-width: 900px; /* Adjusted max-width for smaller media */
             margin: 40px auto;
         }
 
@@ -60,13 +59,13 @@
         /* --- INTRO ANIMATION STYLES --- */
         #hero-icon-wrapper {
             display: inline-block;
-            border-radius: 22.5%; /* Standard iOS icon rounding */
+            border-radius: 22.5%;
             box-shadow: 0 15px 40px rgba(0,0,0,0.4);
             margin-bottom: 2rem;
             transition: transform 3.6s cubic-bezier(0.6, 0, 0.2, 1);
         }
         #hero-icon {
-            display: block; /* Removes extra space below the image */
+            display: block;
         }
         
         .content-fade {
@@ -84,10 +83,9 @@
         /* --- END INTRO ANIMATION STYLES --- */
 
         header h1 {
-            font-size: 4rem;
+            font-size: 3.5rem; /* Slightly smaller for balance */
             font-weight: 700;
             line-height: 1.2;
-            /* -- NEW GRADIENT -- */
             background: linear-gradient(90deg, #fff, var(--primary-accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -102,7 +100,7 @@
         }
 
         h2 {
-            font-size: 2.5rem;
+            font-size: 2.2rem; /* Adjusted for new layout */
             color: var(--primary-accent);
             font-weight: 600;
             margin-bottom: 1rem;
@@ -124,7 +122,7 @@
             
             display: flex;
             align-items: center;
-            gap: 3rem;
+            gap: 2.5rem;
             
             opacity: 0;
             transform: translateY(30px);
@@ -141,19 +139,56 @@
         }
         
         .feature-text { flex: 1; }
-        .feature-media { flex: 1.5; text-align: center; }
+        .feature-media { 
+            flex: 1; /* Made text and media equal width */
+            text-align: center;
+            position: relative; /* Needed for the replay button */
+        }
         
         .feature-media video, .feature-media img {
             width: 100%;
-            max-width: 450px; /* Constrain media width for better layout */
+            /* Removed max-width to allow flexbox to control size */
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         
+        /* -- NEW -- Replay Button Styling */
+        .replay-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 60px;
+            height: 60px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .replay-button.visible {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .replay-icon {
+            width: 0;
+            height: 0;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-left: 20px solid white;
+            margin-left: 5px; /* Center the play triangle */
+        }
+
         .app-store-button {
             display: inline-block;
             background-color: var(--primary-accent);
-            color: #1a1a1d; /* Dark text for light button */
+            color: #1a1a1d;
             padding: 12px 24px;
             border-radius: 12px;
             text-decoration: none;
@@ -198,7 +233,6 @@
 
     <div class="container">
         <header>
-            <!-- Wrapper for icon shadow and rounded corners -->
             <div id="hero-icon-wrapper">
                 <img id="hero-icon" src="images/AppIconNudge.png" alt="Nudge App Icon" width="140" height="140" style="border-radius: 22.5%;">
             </div>
@@ -208,27 +242,13 @@
                 <p class="tagline">
                     The modern alarm clock institutionalizes failure with the snooze button. Nudge is the antidote: a small, achievable win that builds momentum for your entire day.
                 </p>
-                <!-- Placeholder for your actual App Store link -->
                 <a href="#" class="app-store-button">Download on the App Store</a>
             </div>
         </header>
 
         <main class="content-fade">
 
-            <!-- ACT 1: The Setup - The User's Intention -->
-            <div class="feature-card animate-on-scroll">
-                <div class="feature-text">
-                    <h2>The Night-Before Contract</h2>
-                    <p>
-                        Your rational, ambitious "Evening Self" knows what time you need to get up. Nudge lets you seal that intention, setting not just a time, but a small, pre-cognitive commitment for the morning.
-                    </p>
-                </div>
-                <div class="feature-media">
-                    <video autoplay loop muted playsinline src="images/app_preview_2.mp4" title="A user setting a new alarm in the Nudge app"></video>
-                </div>
-            </div>
-
-            <!-- ACT 2: The Challenge - The Moment of Truth -->
+            <!-- ACT 1 (Formerly Act 2): The Challenge -->
             <div class="feature-card animate-on-scroll">
                 <div class="feature-text">
                     <h2>Why is waking up a test of willpower?</h2>
@@ -238,10 +258,25 @@
                 </div>
                 <div class="feature-media">
                     <video autoplay loop muted playsinline src="images/app_preview_1.mp4" title="The Nudge alarm fires and the user draws a pattern to dismiss it"></video>
+                    <button class="replay-button" aria-label="Replay Video"><div class="replay-icon"></div></button>
+                </div>
+            </div>
+
+            <!-- ACT 2 (Formerly Act 1): The Setup -->
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-text">
+                    <h2>The Night-Before Contract</h2>
+                    <p>
+                        Your rational, ambitious "Evening Self" knows what time you need to get up. Nudge lets you seal that intention, setting not just a time, but a small, pre-cognitive commitment for the morning.
+                    </p>
+                </div>
+                <div class="feature-media">
+                    <video autoplay loop muted playsinline src="images/app_preview_2.mp4" title="A user setting a new alarm in the Nudge app"></video>
+                    <button class="replay-button" aria-label="Replay Video"><div class="replay-icon"></div></button>
                 </div>
             </div>
             
-            <!-- ACT 3: The Reward - The Tangible Outcome -->
+            <!-- ACT 3: The Reward -->
             <div class="feature-card animate-on-scroll">
                 <div class="feature-text">
                     <h2>What gets measured, gets managed.</h2>
@@ -276,7 +311,6 @@
             if (lastVisit === today) {
                 body.classList.remove('intro-animating');
             } else {
-                // Short delay to allow rendering before animation starts
                 setTimeout(() => {
                     body.classList.remove('intro-animating');
                     localStorage.setItem(lastVisitKey, today);
@@ -292,11 +326,33 @@
                 }
             });
         }, {
-            threshold: 0.2 // Trigger when 20% of the card is visible
+            threshold: 0.2
         });
 
         const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
         elementsToAnimate.forEach(el => observer.observe(el));
+
+        // -- NEW -- Video replay logic
+        document.querySelectorAll('.feature-media').forEach(container => {
+            const video = container.querySelector('video');
+            const replayButton = container.querySelector('.replay-button');
+
+            if (video && replayButton) {
+                video.addEventListener('ended', () => {
+                    replayButton.classList.add('visible');
+                });
+
+                replayButton.addEventListener('click', () => {
+                    video.play();
+                    replayButton.classList.remove('visible');
+                });
+
+                // Hide button when video starts playing
+                video.addEventListener('play', () => {
+                    replayButton.classList.remove('visible');
+                });
+            }
+        });
     </script>
 </body>
 </html>
