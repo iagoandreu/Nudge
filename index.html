@@ -3,128 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nudge - The Alarm That Wakes Your Brain</title>
-    <meta name="description" content="Nudge is an intelligent iOS alarm clock that replaces the snooze button with a simple cognitive puzzle, helping you win the first moments of your day.">
-    <meta name="keywords" content="alarm clock, no snooze, oversleeping, wake up challenge, iOS app, AlarmKit, cognitive puzzle, productivity, morning routine, win the morning">
+    <title>Nudge - Win The First Battle of Your Day</title>
+    <meta name="description" content="Nudge is an intelligent iOS alarm that replaces the snooze button with a simple cognitive puzzle. It's not about waking up; it's about winning your morning.">
+    <meta name="keywords" content="alarm clock, no snooze, oversleeping, wake up challenge, iOS app, AlarmKit, cognitive puzzle, productivity, morning routine, win the morning, Rory Sutherland">
     
-    <!-- Open Graph tags for social sharing -->
-    <meta property="og:title" content="Nudge - The Alarm That Wakes Your Brain">
+    <meta property="og:title" content="Nudge - Most Alarms Wake Your Ears. Nudge Wakes Your Brain.">
     <meta property="og:description" content="Stop hitting snooze. Nudge uses a simple cognitive puzzle to make waking up your first achievement of the day.">
     <meta property="og:type" content="website">
-    <!-- <meta property="og:image" content="[URL to your app icon or promo image]"> -->
+    <meta property="og:image" content="images/AppIconNudge.png">
+
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --background-color: #1a1a1d;
+            --text-color: #e0e0e0;
+            /* -- NEW THEME COLOR -- */
+            --primary-accent: rgb(219, 230, 185);
+            --secondary-accent: #a9cce3; /* Kept for contrast */
+            --card-background: rgba(44, 44, 46, 0.4);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(-45deg, #1d2b38, #1a1a1d, #2c2a3a);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+            color: var(--text-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             margin: 0;
-            padding: 2rem 1rem;
-            text-align: center;
-            line-height: 1.6;
+            padding: 2rem;
+            line-height: 1.7;
+            overflow-x: hidden;
         }
-        main {
-            max-width: 650px;
+
+        .container {
+            max-width: 1100px; 
             margin: 40px auto;
-            text-align: left;
         }
-        h1 {
-            font-size: 2.5rem;
-            color: #ffffff;
+
+        header {
+            text-align: center;
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        /* --- INTRO ANIMATION STYLES --- */
+        #hero-icon-wrapper {
+            display: inline-block;
+            border-radius: 22.5%; /* Standard iOS icon rounding */
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+            margin-bottom: 2rem;
+            transition: transform 3.6s cubic-bezier(0.6, 0, 0.2, 1);
+        }
+        #hero-icon {
+            display: block; /* Removes extra space below the image */
+        }
+        
+        .content-fade {
+            opacity: 1;
+            transition: opacity 1.5s ease-in-out 2s;
+        }
+        
+        body.intro-animating #hero-icon-wrapper {
+            transform: scale(3) translateY(calc(50vh - 200px));
+        }
+
+        body.intro-animating .content-fade {
+            opacity: 0;
+        }
+        /* --- END INTRO ANIMATION STYLES --- */
+
+        header h1 {
+            font-size: 4rem;
             font-weight: 700;
-            margin-bottom: 1rem;
+            line-height: 1.2;
+            /* -- NEW GRADIENT -- */
+            background: linear-gradient(90deg, #fff, var(--primary-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
         }
+        
+        header .tagline {
+            font-size: 1.2rem;
+            color: #bbbbbb;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
         h2 {
-            font-size: 1.8rem;
-            color: #a9cce3; /* A subtle blue accent */
+            font-size: 2.5rem;
+            color: var(--primary-accent);
             font-weight: 600;
-            margin-top: 3rem;
             margin-bottom: 1rem;
         }
+        
         p {
             font-size: 1.1rem;
             color: #bbbbbb;
-            margin-bottom: 1.5rem;
         }
-        .slogan {
-            font-style: italic;
-            color: #cccccc;
-            margin-bottom: 3rem;
+
+        .feature-card {
+            background: var(--card-background);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
-        .cta {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ffffff;
+        
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
+
+        .feature-card:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        
+        .feature-text { flex: 1; }
+        .feature-media { flex: 1.5; text-align: center; }
+        
+        .feature-media video, .feature-media img {
+            width: 100%;
+            max-width: 450px; /* Constrain media width for better layout */
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .app-store-button {
+            display: inline-block;
+            background-color: var(--primary-accent);
+            color: #1a1a1d; /* Dark text for light button */
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 2rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .app-store-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(219, 230, 185, 0.2);
+        }
+        
         footer {
+            text-align: center;
             margin-top: 4rem;
             font-size: 0.9rem;
             color: #888888;
         }
-        a {
-            color: #5dade2;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
+        
+        footer a { color: #aaa; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            header { padding: 4rem 0; }
+            header h1 { font-size: 2.8rem; }
+            h2 { font-size: 2rem; }
+
+            .feature-card, .feature-card:nth-child(even) {
+                flex-direction: column;
+                padding: 2rem;
+            }
+            
+            body.intro-animating #hero-icon-wrapper {
+                transform: scale(3) translateY(calc(50vh - 150px));
+            }
         }
     </style>
 </head>
-<body>
+<body class="intro-animating">
 
-    <main>
+    <div class="container">
         <header>
-            <h1>Turn waking up into your first achievement of the day.</h1>
+            <!-- Wrapper for icon shadow and rounded corners -->
+            <div id="hero-icon-wrapper">
+                <img id="hero-icon" src="images/AppIconNudge.png" alt="Nudge App Icon" width="140" height="140" style="border-radius: 22.5%;">
+            </div>
+
+            <div class="content-fade">
+                <h1>Turn waking up into your first achievement of the day.</h1>
+                <p class="tagline">
+                    The modern alarm clock institutionalizes failure with the snooze button. Nudge is the antidote: a small, achievable win that builds momentum for your entire day.
+                </p>
+                <!-- Placeholder for your actual App Store link -->
+                <a href="#" class="app-store-button">Download on the App Store</a>
+            </div>
         </header>
 
-        <p>
-            Let's be honest. The modern alarm clock is a masterpiece of flawed design. It solves a simple problem—making an unconscious person conscious—but completely ignores the far more difficult one: **making a conscious person functional.**
-        </p>
-        <p>
-            The result? The snooze button. A feature that, by its very existence, institutionalizes failure before your feet have even touched the floor. You don't hit snooze because you need more sleep; you hit it because the decision to stop sleeping is too difficult to make in a groggy state. The cost of that decision is too high.
-        </p>
-        <p>
-            This is where we introduce a little bit of what you might call "choice architecture." Or, perhaps, a "beneficial impediment."
-        </p>
+        <main class="content-fade">
 
-        <h2>Most alarms wake your ears. Nudge wakes your brain.</h2>
-        <p>
-            Nudge doesn't just make a noise. It understands that the real battle for your morning is won or lost in the first 90 seconds of consciousness.
-        </p>
-        <p>
-            Instead of presenting you with a simple "stop" button—a temptation for your still-dreaming mind to dismiss—Nudge gives you a simple, low-stakes puzzle. A sequence of patterns appears. To silence the alarm, you must watch, remember, and draw.
-        </p>
-        <p>
-            This isn't a test of intelligence. It's not a stressful math problem. It is a pre-cognitive commitment. A small, achievable task that requires just enough focus to gently pull your brain from a state of inertia into a state of engagement.
-        </p>
-        <p>
-            By the time you've solved your patterns, something magical has happened. You haven't just silenced an alarm; you've completed a task. You've won. And that small victory creates the momentum you need to win the next one: getting out of bed.
-        </p>
+            <!-- ACT 1: The Setup - The User's Intention -->
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-text">
+                    <h2>The Night-Before Contract</h2>
+                    <p>
+                        Your rational, ambitious "Evening Self" knows what time you need to get up. Nudge lets you seal that intention, setting not just a time, but a small, pre-cognitive commitment for the morning.
+                    </p>
+                </div>
+                <div class="feature-media">
+                    <video autoplay loop muted playsinline src="images/app_preview_2.mp4" title="A user setting a new alarm in the Nudge app"></video>
+                </div>
+            </div>
 
-        <h2>Why is there no snooze button?</h2>
-        <p>
-            Because a snooze button is a feature that optimizes for failure. It is a vote of no-confidence in your future self. Nudge is different. It is a vote of confidence. It is designed to make the "right" decision—getting up—not just easier, but the only path forward. We didn't forget the snooze button; we eliminated the need for it.
-        </p>
+            <!-- ACT 2: The Challenge - The Moment of Truth -->
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-text">
+                    <h2>Why is waking up a test of willpower?</h2>
+                    <p>
+                        It shouldn't be. Willpower is a finite resource, especially when you're half-conscious. Nudge replaces the high-cost decision of "getting up" with a low-stakes task: drawing a simple shape. This isn't a test; it's a gentle handshake to bring your brain online.
+                    </p>
+                </div>
+                <div class="feature-media">
+                    <video autoplay loop muted playsinline src="images/app_preview_1.mp4" title="The Nudge alarm fires and the user draws a pattern to dismiss it"></video>
+                </div>
+            </div>
+            
+            <!-- ACT 3: The Reward - The Tangible Outcome -->
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-text">
+                    <h2>What gets measured, gets managed.</h2>
+                    <p>
+                        By solving the puzzle, you haven't just silenced an alarm; you've won. Nudge tracks your performance, turning the chore of waking up into a measurable skill. That small victory provides the psychological momentum to win the next task: getting out of bed.
+                    </p>
+                </div>
+                <div class="feature-media">
+                    <img src="images/app_preview_3.png" alt="A screenshot of the Nudge statistics screen showing the user's average wake-up time">
+                </div>
+            </div>
+            
+            <section class="support animate-on-scroll" style="text-align: center; padding: 4rem 0;">
+                <h2>Stop losing your mornings. Start achieving them.</h2>
+                <a href="#" class="app-store-button">Download Nudge Today</a>
+            </section>
+        </main>
+
+        <footer class="content-fade">
+            <p>&copy; 2025 Iago Andreu González | <a href="privacy-policy.html">Privacy Policy</a></p>
+        </footer>
+    </div>
+    
+    <script>
+        // Intro animation logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const lastVisitKey = 'nudgeLastVisitDate';
+            const today = new Date().toDateString();
+            const lastVisit = localStorage.getItem(lastVisitKey);
+            const body = document.body;
+
+            if (lastVisit === today) {
+                body.classList.remove('intro-animating');
+            } else {
+                // Short delay to allow rendering before animation starts
+                setTimeout(() => {
+                    body.classList.remove('intro-animating');
+                    localStorage.setItem(lastVisitKey, today);
+                }, 100);
+            }
+        });
         
-        <p class="cta">
-            Stop losing your mornings. Start achieving them.
-        </p>
-        
-        <!--
-            PLACE YOUR APP STORE BADGE HERE.
-            You can get the official badge from Apple's marketing resources.
-            It will look something like this:
-            <a href="[Your App Store URL]">
-                <img src="[URL to App Store badge image]" alt="Download Nudge on the App Store">
-            </a>
-        -->
-        <p>Download Nudge Today.</p>
+        // Scroll-in animation logic for feature cards
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.2 // Trigger when 20% of the card is visible
+        });
 
-    </main>
-
-    <footer>
-        <p>&copy; 2025 Iago Andreu González | <a href="privacy-policy.html">Privacy Policy</a></p>
-    </footer>
-
+        const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
+        elementsToAnimate.forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>
