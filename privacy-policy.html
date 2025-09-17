@@ -6,93 +6,147 @@
     <title>Privacy Policy - Nudge Alarm</title>
     <meta name="description" content="Privacy Policy for the Nudge Alarm iOS application. Nudge does not collect any personal data.">
     
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
-        body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 2rem 1rem;
-            line-height: 1.6;
+        :root {
+            --background-color: #1a1a1d;
+            --text-color: #e0e0e0;
+            --primary-accent: rgb(219, 230, 185);
+            --secondary-accent: #a9cce3; /* Blue for links */
         }
-        main {
-            max-width: 700px;
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            background: linear-gradient(-45deg, #1d2b38, #1a1a1d, #2c2a3a);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+            color: var(--text-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 800px;
             margin: 40px auto;
+        }
+
+        main {
+            background: rgba(26, 26, 29, 0.6); /* Slightly darker card background */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem 3rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             text-align: left;
         }
+
         h1 {
-            font-size: 2.2rem;
-            color: #ffffff;
+            font-size: 2.5rem;
             font-weight: 700;
+            line-height: 1.2;
+            background: linear-gradient(90deg, #fff, var(--primary-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
         }
+        
         h2 {
             font-size: 1.5rem;
-            color: #a9cce3; /* A subtle blue accent */
+            color: var(--primary-accent);
             font-weight: 600;
             margin-top: 2.5rem;
             margin-bottom: 1rem;
-            border-bottom: 1px solid #333;
-            padding-bottom: 0.5rem;
         }
+
         p, li {
             font-size: 1rem;
             color: #bbbbbb;
         }
+
         strong {
-            color: #e0e0e0;
+            color: var(--text-color);
         }
-        footer {
-            margin-top: 4rem;
-            font-size: 0.9rem;
-            color: #888888;
-            text-align: center;
-        }
+        
         a {
-            color: #5dade2;
+            color: var(--secondary-accent);
             text-decoration: none;
+            font-weight: 600;
         }
+        
         a:hover {
             text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #888888;
+        }
+        
+        footer a {
+            color: #aaa;
+            font-weight: 400;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            main { padding: 1.5rem; }
+            h1 { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
 
-    <main>
-        <h1>Privacy Policy for Nudge Alarm</h1>
-        <p><strong>Effective Date:</strong> August 24, 2025</p>
-
-        <p>This Privacy Policy describes how Iago Andreu ("we," "us," or "our") handles information in the Nudge Alarm application (the "App"). Our commitment is to protect your privacy.</p>
-
-        <h2>1. No Personal Data Collection</h2>
-        <p>Nudge Alarm is designed to be a private and secure utility. The App does not collect, store, transmit, or share any personally identifiable information or personal data.</p>
-        <p>We do not collect information such as your name, email address, location, contacts, or unique device identifiers. Furthermore, the App does not include any third-party analytics or advertising frameworks.</p>
-
-        <h2>2. Data You Create (Alarms and Statistics)</h2>
-        <p>All data you create within the App, including your alarm settings (time, repeat days, sound choice, label) and your alarm statistics (elapsed time to stop an alarm), is stored exclusively and locally on your device.</p>
-        <p>This data is sandboxed within the App's private storage and is not accessible by us or any third party.</p>
-
-        <h2>3. Data Sharing for Widgets (App Group)</h2>
-        <p>To provide widget functionality, the App uses a shared "App Group" container on your device. This is a standard Apple feature that allows the main Nudge Alarm app and its widgets to securely share data with each other so they can work together. This data remains on your device at all times and is subject to the same privacy protections as all other local data. It is never transmitted off your device by the App.</p>
-
-        <h2>4. Your Control Over Your Data</h2>
-        <p>Because all data is stored locally on your device, you have complete control. You can delete your data at any time by deleting the App from your device.</p>
-
-        <h2>5. Children's Privacy</h2>
-        <p>We do not knowingly collect any personally identifiable information from anyone, including children under the age of 13. Since the App does not collect any personal information at all, it is safe for users of all ages.</p>
-
-        <h2>6. Changes to This Privacy Policy</h2>
-        <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes.</p>
-
-        <h2>7. Contact Us</h2>
-        <p>If you have any questions about this Privacy Policy, you can contact us:</p>
-        <p>By email: <a href="mailto:nudge2401@gmail.com">nudge2401@gmail.com</a></p>
-    </main>
+    <div class="container">
+        <main>
+            <h1>Privacy Policy for Nudge Alarm</h1>
+            <p><strong>Effective Date:</strong> August 24, 2025</p>
     
-    <footer>
-        <p><a href="index.html">Back to Home</a></p>
-    </footer>
+            <p>This Privacy Policy describes how Iago Andreu ("we," "us," or "our") handles information in the Nudge Alarm application (the "App"). Our commitment is to protect your privacy.</p>
+    
+            <h2>1. No Personal Data Collection</h2>
+            <p>Nudge Alarm is designed to be a private and secure utility. The App does not collect, store, transmit, or share any personally identifiable information or personal data.</p>
+            <p>We do not collect information such as your name, email address, location, contacts, or unique device identifiers. Furthermore, the App does not include any third-party analytics or advertising frameworks.</p>
+    
+            <h2>2. Data You Create (Alarms and Statistics)</h2>
+            <p>All data you create within the App, including your alarm settings (time, repeat days, sound choice, label) and your alarm statistics (elapsed time to stop an alarm), is stored exclusively and locally on your device.</p>
+            <p>This data is sandboxed within the App's private storage and is not accessible by us or any third party.</p>
+    
+            <h2>3. Data Sharing for Widgets (App Group)</h2>
+            <p>To provide widget functionality, the App uses a shared "App Group" container on your device. This is a standard Apple feature that allows the main Nudge Alarm app and its widgets to securely share data with each other so they can work together. This data remains on your device at all times and is subject to the same privacy protections as all other local data. It is never transmitted off your device by the App.</p>
+    
+            <h2>4. Your Control Over Your Data</h2>
+            <p>Because all data is stored locally on your device, you have complete control. You can delete your data at any time by deleting the App from your device.</p>
+    
+            <h2>5. Children's Privacy</h2>
+            <p>We do not knowingly collect any personally identifiable information from anyone, including children under the age of 13. Since the App does not collect any personal information at all, it is safe for users of all ages.</p>
+    
+            <h2>6. Changes to This Privacy Policy</h2>
+            <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes.</p>
+    
+            <h2>7. Contact Us</h2>
+            <p>If you have any questions about this Privacy Policy, you can contact us:</p>
+            <p>By email: <a href="mailto:nudge2401@gmail.com">nudge2401@gmail.com</a></p>
+        </main>
+        
+        <footer>
+            <p><a href="index.html">Back to Home</a></p>
+        </footer>
+    </div>
 
 </body>
 </html>
