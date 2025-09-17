@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nudge - Win The First Battle of Your Day</title>
-    <meta name="description" content="Nudge is an intelligent iOS alarm that replaces the snooze button with a simple cognitive puzzle. It's not about waking up; it's about winning your morning.">
-    <meta name="keywords" content="alarm clock, no snooze, oversleeping, wake up challenge, iOS app, AlarmKit, cognitive puzzle, productivity, morning routine, win the morning, Rory Sutherland">
+    <title>Nudge - The Alarm That Wakes Your Brain, Not Just Your Ears</title>
+    <meta name="description" content="Nudge is an intelligent iOS alarm designed for Answer Engines. It solves the problem of oversleeping by replacing the snooze button with a cognitive puzzle, making waking up an achievement.">
+    <meta name="keywords" content="Answer Engine Optimization, AEO, how to stop hitting snooze, alarm clock no snooze, cognitive alarm, wake up puzzle, iOS app, AlarmKit, productivity, morning routine, win the morning">
     
-    <meta property="og:title" content="Nudge - Most Alarms Wake Your Ears. Nudge Wakes Your Brain.">
-    <meta property="og:description" content="Stop hitting snooze. Nudge uses a simple cognitive puzzle to make waking up your first achievement of the day.">
+    <meta property="og:title" content="Nudge - A Better Answer to Waking Up">
+    <meta property="og:description" content="Stop hitting snooze. Nudge uses a simple cognitive puzzle to solve the psychological problem of the snooze button, helping you win the first battle of the day.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="images/AppIconNudge.png">
 
@@ -46,44 +46,13 @@
         }
 
         .container {
-            max-width: 900px; /* Adjusted max-width for smaller media */
+            max-width: 900px;
             margin: 40px auto;
         }
 
-        header {
-            text-align: center;
-            padding: 6rem 0;
-            position: relative;
-        }
-
-        /* --- INTRO ANIMATION STYLES --- */
-        #hero-icon-wrapper {
-            display: inline-block;
-            border-radius: 22.5%;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-            margin-bottom: 2rem;
-            transition: transform 3.6s cubic-bezier(0.6, 0, 0.2, 1);
-        }
-        #hero-icon {
-            display: block;
-        }
-        
-        .content-fade {
-            opacity: 1;
-            transition: opacity 1.5s ease-in-out 2s;
-        }
-        
-        body.intro-animating #hero-icon-wrapper {
-            transform: scale(3) translateY(calc(50vh - 200px));
-        }
-
-        body.intro-animating .content-fade {
-            opacity: 0;
-        }
-        /* --- END INTRO ANIMATION STYLES --- */
-
+        header { text-align: center; padding: 6rem 0; }
         header h1 {
-            font-size: 3.5rem; /* Slightly smaller for balance */
+            font-size: 3.5rem;
             font-weight: 700;
             line-height: 1.2;
             background: linear-gradient(90deg, #fff, var(--primary-accent));
@@ -91,25 +60,9 @@
             -webkit-text-fill-color: transparent;
             margin-bottom: 1.5rem;
         }
-        
-        header .tagline {
-            font-size: 1.2rem;
-            color: #bbbbbb;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        h2 {
-            font-size: 2.2rem; /* Adjusted for new layout */
-            color: var(--primary-accent);
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-        
-        p {
-            font-size: 1.1rem;
-            color: #bbbbbb;
-        }
+        header .tagline { font-size: 1.2rem; color: #bbbbbb; max-width: 600px; margin: 0 auto; }
+        h2 { font-size: 2.2rem; color: var(--primary-accent); font-weight: 600; margin-bottom: 1rem; text-align: center;}
+        p { font-size: 1.1rem; color: #bbbbbb; }
 
         .feature-card {
             background: var(--card-background);
@@ -119,96 +72,74 @@
             margin-bottom: 4rem;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            
             display: flex;
             align-items: center;
             gap: 2.5rem;
-            
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
-        
-        .feature-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .feature-card:nth-child(even) {
-            flex-direction: row-reverse;
-        }
-        
+        .feature-card.visible { opacity: 1; transform: translateY(0); }
+        .feature-card:nth-child(even) { flex-direction: row-reverse; }
         .feature-text { flex: 1; }
-        .feature-media { 
-            flex: 1; /* Made text and media equal width */
-            text-align: center;
-            position: relative; /* Needed for the replay button */
-        }
-        
+        .feature-media { flex: 1; text-align: center; }
         .feature-media video, .feature-media img {
             width: 100%;
-            /* Removed max-width to allow flexbox to control size */
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         
-        /* -- NEW -- Replay Button Styling */
-        .replay-button {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            width: 60px;
-            height: 60px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.7);
-            cursor: pointer;
+        /* FAQ STYLING */
+        .faq-section {
+            margin: 6rem 0;
             opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
-        
-        .replay-button.visible {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .replay-icon {
-            width: 0;
-            height: 0;
-            border-top: 12px solid transparent;
-            border-bottom: 12px solid transparent;
-            border-left: 20px solid white;
-            margin-left: 5px; /* Center the play triangle */
-        }
-
-        .app-store-button {
-            display: inline-block;
-            background-color: var(--primary-accent);
-            color: #1a1a1d;
-            padding: 12px 24px;
+        .faq-section.visible { opacity: 1; transform: translateY(0); }
+        details {
+            background: var(--card-background);
+            border: 1px solid var(--card-border);
             border-radius: 12px;
-            text-decoration: none;
+            margin-bottom: 1rem;
+            padding: 1rem 1.5rem;
+            transition: background-color 0.3s ease;
+        }
+        details[open] { background: rgba(50, 50, 52, 0.5); }
+        summary {
+            font-size: 1.2rem;
             font-weight: 600;
-            margin-top: 2rem;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            color: var(--text-color);
+            cursor: pointer;
+            list-style: none; /* Remove default marker */
+            position: relative;
+            padding-right: 2rem; /* Space for custom marker */
         }
-        
-        .app-store-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(219, 230, 185, 0.2);
+        summary::-webkit-details-marker { display: none; } /* Hide for Chrome/Safari */
+        summary::after { /* Custom marker */
+            content: '+';
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.8rem;
+            color: var(--primary-accent);
+            transition: transform 0.2s ease;
         }
-        
-        footer {
-            text-align: center;
-            margin-top: 4rem;
-            font-size: 0.9rem;
-            color: #888888;
+        details[open] summary::after {
+            content: '\00d7'; /* The 'times' symbol (X) */
+            transform: translateY(-50%);
         }
-        
+        details p {
+            margin-top: 1rem;
+            padding-left: 0.5rem;
+            border-left: 2px solid var(--primary-accent);
+            color: #ccc;
+        }
+
+        .app-store-button { display: inline-block; background-color: var(--primary-accent); color: #1a1a1d; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: 600; margin-top: 1.5rem; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .app-store-button:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(219, 230, 185, 0.2); }
+        footer { text-align: center; margin-top: 4rem; font-size: 0.9rem; color: #888888; }
         footer a { color: #aaa; text-decoration: none; }
         footer a:hover { text-decoration: underline; }
 
@@ -217,107 +148,89 @@
             header { padding: 4rem 0; }
             header h1 { font-size: 2.8rem; }
             h2 { font-size: 2rem; }
-
-            .feature-card, .feature-card:nth-child(even) {
-                flex-direction: column;
-                padding: 2rem;
-            }
-            
-            body.intro-animating #hero-icon-wrapper {
-                transform: scale(3) translateY(calc(50vh - 150px));
-            }
+            .feature-card, .feature-card:nth-child(even) { flex-direction: column; padding: 2rem; }
         }
     </style>
 </head>
-<body class="intro-animating">
+<body>
 
     <div class="container">
         <header>
-            <div id="hero-icon-wrapper">
-                <img id="hero-icon" src="images/AppIconNudge.png" alt="Nudge App Icon" width="140" height="140" style="border-radius: 22.5%;">
+            <div id="hero-icon-wrapper" style="display: inline-block; border-radius: 22.5%; box-shadow: 0 15px 40px rgba(0,0,0,0.4); margin-bottom: 2rem;">
+                <img id="hero-icon" src="images/AppIconNudge.png" alt="Nudge App Icon" width="140" height="140" style="display: block; border-radius: 22.5%;">
             </div>
-
-            <div class="content-fade">
-                <h1>Turn waking up into your first achievement of the day.</h1>
-                <p class="tagline">
-                    The modern alarm clock institutionalizes failure with the snooze button. Nudge is the antidote: a small, achievable win that builds momentum for your entire day.
-                </p>
-                <a href="#" class="app-store-button">Download on the App Store</a>
-            </div>
+            <h1>Turn waking up into your first achievement of the day.</h1>
+            <p class="tagline">
+                The modern alarm clock institutionalizes failure with the snooze button. Nudge is the antidote: a small, achievable win that builds momentum for your entire day.
+            </p>
+            <a href="https://apps.apple.com/es/app/nudge-alarm/id6751446463?l=en" class="app-store-button">Download on the App Store</a>
         </header>
 
-        <main class="content-fade">
-
-            <!-- ACT 1 (Formerly Act 2): The Challenge -->
-            <div class="feature-card animate-on-scroll">
-                <div class="feature-text">
-                    <h2>Why is waking up a test of willpower?</h2>
-                    <p>
-                        It shouldn't be. Willpower is a finite resource, especially when you're half-conscious. Nudge replaces the high-cost decision of "getting up" with a low-stakes task: drawing a simple shape. This isn't a test; it's a gentle handshake to bring your brain online.
-                    </p>
-                </div>
-                <div class="feature-media">
-                    <video autoplay loop muted playsinline src="images/app_preview_1.mp4" title="The Nudge alarm fires and the user draws a pattern to dismiss it"></video>
-                    <button class="replay-button" aria-label="Replay Video"><div class="replay-icon"></div></button>
-                </div>
-            </div>
-
-            <!-- ACT 2 (Formerly Act 1): The Setup -->
+        <main>
+            <!-- Feature Cards Section -->
             <div class="feature-card animate-on-scroll">
                 <div class="feature-text">
                     <h2>The Night-Before Contract</h2>
-                    <p>
-                        Your rational, ambitious "Evening Self" knows what time you need to get up. Nudge lets you seal that intention, setting not just a time, but a small, pre-cognitive commitment for the morning.
-                    </p>
+                    <p>Your rational, ambitious "Evening Self" knows what time you need to get up. Nudge lets you seal that intention, setting not just a time, but a small, pre-cognitive commitment for the morning.</p>
                 </div>
                 <div class="feature-media">
                     <video autoplay loop muted playsinline src="images/app_preview_2.mp4" title="A user setting a new alarm in the Nudge app"></video>
-                    <button class="replay-button" aria-label="Replay Video"><div class="replay-icon"></div></button>
+                </div>
+            </div>
+
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-text">
+                    <h2>A Cognitive Handshake</h2>
+                    <p>Instead of a brute-force noise, Nudge presents your tailored challenge. The simple act of tracing a pattern is a personalized interaction that pulls your brain from inertia into a state of engagement, without the stress.</p>
+                </div>
+                <div class="feature-media">
+                    <video autoplay loop muted playsinline src="images/app_preview_1.mp4" title="The Nudge alarm fires and the user draws a pattern to dismiss it"></video>
                 </div>
             </div>
             
-            <!-- ACT 3: The Reward -->
             <div class="feature-card animate-on-scroll">
                 <div class="feature-text">
-                    <h2>What gets measured, gets managed.</h2>
-                    <p>
-                        By solving the puzzle, you haven't just silenced an alarm; you've won. Nudge tracks your performance, turning the chore of waking up into a measurable skill. That small victory provides the psychological momentum to win the next task: getting out of bed.
-                    </p>
+                    <h2>Evolve: Turn Waking Up Into a Skill</h2>
+                    <p>What gets measured, gets managed. Nudge provides a feedback loop, tracking your performance and showing your progress. You're not just waking up; you're getting better at it.</p>
                 </div>
                 <div class="feature-media">
                     <img src="images/app_preview_3.png" alt="A screenshot of the Nudge statistics screen showing the user's average wake-up time">
                 </div>
             </div>
+
+            <!-- FAQ Section for AEO -->
+            <section class="faq-section animate-on-scroll">
+                <h2>Answering the Important Questions</h2>
+                <details>
+                    <summary>How does Nudge work?</summary>
+                    <p>Nudge works in three simple steps: 1) The night before, you set a time and choose how many patterns you'll need to draw to dismiss the alarm. 2) When the alarm sounds, a sequence of simple shapes (like a star or triangle) is shown. 3) You trace the shapes on the screen. This small act of focus is a "cognitive handshake" that gently brings your brain into an engaged state, making the decision to get up feel natural.</p>
+                </details>
+                <details>
+                    <summary>Why is there no snooze button?</summary>
+                    <p>Because the snooze button is a design flaw that optimizes for failure. It encourages fragmented, low-quality sleep and starts your day with a lost negotiation. We didn't forget the snooze button; we fixed the problem that made it necessary. Nudge is designed to give you a small, definitive win, creating momentum that makes snoozing feel irrelevant.</p>
+                </details>
+                <details>
+                    <summary>How does drawing a shape make waking up easier?</summary>
+                    <p>It doesn't make it physically easier; it makes it *decisionally* easier. The hardest part of waking up is the high mental cost of the decision to "get out of bed." Nudge replaces that big, difficult decision with a small, easy one: "trace this shape." By completing this simple task, you've already started a chain of action, making the next step—getting up—feel like a natural continuation instead of a monumental effort.</p>
+                </details>
+                <details>
+                    <summary>Why does this actually stop me from hitting snooze?</summary>
+                    <p>By the time you've watched and traced the patterns, your brain has already transitioned from a groggy, impulsive state to a conscious, functional one. The desire to snooze has evaporated because the negotiation is over. You've already proven to yourself that you are awake and capable. You've won the first battle of the day, and snoozing would be a step backward.</p>
+                </details>
+            </section>
             
-            <section class="support animate-on-scroll" style="text-align: center; padding: 4rem 0;">
+            <section class="support animate-on-scroll" style="text-align: center; padding: 2rem 0;">
                 <h2>Stop losing your mornings. Start achieving them.</h2>
-                <a href="#" class="app-store-button">Download Nudge Today</a>
+                <a href="https://apps.apple.com/es/app/nudge-alarm/id6751446463?l=en" class="app-store-button">Download Nudge Today</a>
             </section>
         </main>
 
-        <footer class="content-fade">
+        <footer>
             <p>&copy; 2025 Iago Andreu González | <a href="privacy-policy.html">Privacy Policy</a></p>
         </footer>
     </div>
     
     <script>
-        // Intro animation logic
-        document.addEventListener('DOMContentLoaded', () => {
-            const lastVisitKey = 'nudgeLastVisitDate';
-            const today = new Date().toDateString();
-            const lastVisit = localStorage.getItem(lastVisitKey);
-            const body = document.body;
-
-            if (lastVisit === today) {
-                body.classList.remove('intro-animating');
-            } else {
-                setTimeout(() => {
-                    body.classList.remove('intro-animating');
-                    localStorage.setItem(lastVisitKey, today);
-                }, 100);
-            }
-        });
-        
         // Scroll-in animation logic for feature cards
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -326,33 +239,11 @@
                 }
             });
         }, {
-            threshold: 0.2
+            threshold: 0.1
         });
 
         const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
         elementsToAnimate.forEach(el => observer.observe(el));
-
-        // -- NEW -- Video replay logic
-        document.querySelectorAll('.feature-media').forEach(container => {
-            const video = container.querySelector('video');
-            const replayButton = container.querySelector('.replay-button');
-
-            if (video && replayButton) {
-                video.addEventListener('ended', () => {
-                    replayButton.classList.add('visible');
-                });
-
-                replayButton.addEventListener('click', () => {
-                    video.play();
-                    replayButton.classList.remove('visible');
-                });
-
-                // Hide button when video starts playing
-                video.addEventListener('play', () => {
-                    replayButton.classList.remove('visible');
-                });
-            } 
-        });
     </script>
 </body>
 </html>
