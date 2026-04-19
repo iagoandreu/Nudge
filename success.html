@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Returning to Nudge...</title>
+    <script type="text/javascript">
+        // This runs as soon as the page loads
+        window.onload = function() {
+            // Tries to open the app
+            window.location.href = "nudge://payment-success";
+            
+            // Optional: Close the tab after a few seconds if it stays open
+            setTimeout(function() {
+                window.close();
+            }, 5000);
+        };
+    </script>
+</head>
+<body>
+    <p>Success! Redirecting you back to the Nudge app...</p>
+    <a href="nudge://payment-success">Click here if you aren't redirected automatically</a>
+</body>
+</html>
