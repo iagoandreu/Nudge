@@ -1,22 +1,137 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Returning to Nudge...</title>
-    <script type="text/javascript">
-        // This runs as soon as the page loads
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Successful - Nudge Alarm</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --background-color: #1a1a1d;
+            --text-color: #e0e0e0;
+            --primary-accent: rgb(219, 230, 185);
+            --secondary-accent: #a9cce3;
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            background: linear-gradient(-45deg, #1d2b38, #1a1a1d, #2c2a3a);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        main {
+            background: rgba(26, 26, 29, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: #1a1a1d;
+            font-size: 2.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #fff, var(--primary-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: #bbbbbb;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--primary-accent);
+            color: #1a1a1d;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+
+        footer {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #888888;
+        }
+
+        footer a { color: #aaa; text-decoration: none; }
+    </style>
+
+    <script>
+        // Auto-redirect logic
         window.onload = function() {
-            // Tries to open the app
-            window.location.href = "nudge://payment-success";
-            
-            // Optional: Close the tab after a few seconds if it stays open
+            // Short delay to let the user see the success message
             setTimeout(function() {
-                window.close();
-            }, 5000);
+                window.location.href = "nudge://payment-success";
+            }, 1500);
         };
     </script>
 </head>
 <body>
-    <p>Success! Redirecting you back to the Nudge app...</p>
-    <a href="nudge://payment-success">Click here if you aren't redirected automatically</a>
+
+    <div class="container">
+        <main>
+            <div class="icon-circle">✓</div>
+            <h1>Welcome to Pro</h1>
+            <p>Your purchase was successful! You are being redirected back to the app to unlock your new features.</p>
+            
+            <a href="nudge://payment-success" class="btn-primary">Open Nudge App</a>
+        </main>
+        
+        <footer>
+            <p>Having trouble? <a href="mailto:nudge2401@gmail.com">Contact Support</a></p>
+        </footer>
+    </div>
+
 </body>
 </html>
