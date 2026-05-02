@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nudge - Partner Program</title>
+    <link rel="stylesheet" href="style.css"> <style>
+        body { font-family: 'Inter', sans-serif; background: #1a1a1d; color: white; display: flex; justify-content: center; padding: 50px 20px; }
+        .form-container { max-width: 400px; width: 100%; background: #2c2a3a; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { color: rgb(219, 230, 185); margin-bottom: 10px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: #1d2b38; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: rgb(219, 230, 185); color: #1a1a1d; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .success-msg { display: none; color: rgb(219, 230, 185); text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <div id="form-content">
+        <h1>Join Nudge</h1>
+        <p>Apply to become an influencer partner and earn commissions.</p>
+        <form id="partnerForm">
+            <input type="text" id="name" placeholder="Full Name" required>
+            <input type="text" id="handle" placeholder="Social Media Handle (@...)" required>
+            <input type="email" id="paypal" placeholder="PayPal Email for Payouts" required>
+            <button type="submit" id="submitBtn">Submit Application</button>
+        </form>
+    </div>
+    <div id="success" class="success-msg">
+        <h2>Application Sent!</h2>
+        <p>We will review your profile and email you your unique referral link shortly.</p>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // PASTE YOUR FIREBASE CONFIG HERE
+    // You find this in Firebase Console > Project Settings > General > Your Apps
+    const firebaseConfig = {
+        apiKey: "AIzaSyA4js7qXmL1EjK1x6Zqyw63rU4RoBmyhnQ",
+        authDomain: "nudge-alarm-backend.firebaseapp.com",
+        projectId: "nudge-alarm-backend",
+        storageBucket: "nudge-alarm-backend.firebasestorage.app",
+        messagingSenderId: "212653565147",
+        appId: "1:212653565147:web:5b53f8b444e28af26b58fe"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.getElementById('partnerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = "Sending...";
+        btn.disabled = true;
+
+        try {
+            await addDoc(collection(db, "partners"), {
+                name: document.getElementById('name').value,
+                handle: document.getElementById('handle').value,
+                paypalEmail: document.getElementById('paypal').value,
+                status: "pending", // Default status
+                dateApplied: serverTimestamp() // Default timestamp
+            });
+
+            document.getElementById('form-content').style.display = 'none';
+            document.getElementById('success').style.display = 'block';
+        } catch (error) {
+            console.error("Error adding document: ", error);
+            alert("Something went wrong. Please try again.");
+            btn.innerText = "Submit Application";
+            btn.disabled = false;
+        }
+    });
+</script>
+
+</body>
+</html>
