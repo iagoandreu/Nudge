@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nudge - Admin Dashboard</title>
+    <style>
+        :root { --primary: rgb(219, 230, 185); --bg: #1a1a1d; --card: #2c2a3a; --text: #e0e0e0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .card { background: var(--card); padding: 25px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        h1, h2 { color: var(--primary); }
+        input { padding: 10px; border-radius: 5px; border: 1px solid #444; background: #1d2b38; color: white; margin-bottom: 10px; width: 100%; box-sizing: border-box; }
+        button { background: var(--primary); color: #1a1a1d; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        button:hover { opacity: 0.8; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #444; }
+        .hidden { display: none; }
+        .approve-btn { background: #4CAF50; color: white; padding: 5px 10px; font-size: 0.8rem; }
+        .forgot-link { color: var(--primary); font-size: 0.8rem; cursor: pointer; text-decoration: underline; display: block; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="login-view" class="card">
+        <h1>Admin Login</h1>
+        <input type="email" id="login-email" placeholder="Email">
+        <input type="password" id="login-password" placeholder="Password">
+        <button id="login-btn">Login</button>
+        <span class="forgot-link" id="reset-btn">Forgot Password?</span>
+    </div>
+
+    <div id="dashboard-view" class="hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Dashboard</h1>
+            <button id="logout-btn" style="background: #ff4d4d; color: white;">Logout</button>
+        </div>
+
+        <div class="card">
+            <h2>Pending Partners</h2>
+            <table id="partners-table">
+                <thead><tr><th>Name</th><th>Handle</th><th>RefCode to Assign</th><th>Action</th></tr></thead>
+                <tbody id="partners-list"></tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>Monthly Sales Report</h2>
+            <table id="sales-table">
+                <thead><tr><th>Partner ID</th><th>Sales Count</th><th>Total Revenue</th><th>Commission Owed</th></tr></thead>
+                <tbody id="sales-list"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // PASTE YOUR CONFIG HERE
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT.appspot.com",
+        messagingSenderId: "...",
+        appId: "..."
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // --- AUTH LOGIC ---
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.getElementById('login-view').classList.add('hidden');
+            document.getElementById('dashboard-view').classList.remove('hidden');
+            loadDashboard();
+        } else {
+            document.getElementById('login-view').classList.remove('hidden');
+            document.getElementById('dashboard-view').classList.add('hidden');
+        }
+    });
+
+    document.getElementById('login-btn').onclick = () => {
+        const email = document.getElementById('login-email').value;
+        const pass = document.getElementById('login-password').value;
+        signInWithEmailAndPassword(auth, email, pass).catch(e => alert(e.message));
+    };
+
+    document.getElementById('logout-btn').onclick = () => signOut(auth);
+
+    document.getElementById('reset-btn').onclick = () => {
+        const email = document.getElementById('login-email').value;
+        if(!email) return alert("Enter email first");
+        sendPasswordResetEmail(auth, email).then(() => alert("Reset email sent!")).catch(e => alert(e.message));
+    };
+
+    // --- DASHBOARD LOGIC ---
+    async function loadDashboard() {
+        loadPartners();
+        loadSales();
+    }
+
+    async function loadPartners() {
+        const q = query(collection(db, "partners"), where("status", "==", "pending"));
+        const snap = await getDocs(q);
+        const list = document.getElementById('partners-list');
+        list.innerHTML = "";
+        
+        snap.forEach((d) => {
+            const data = d.data();
+            list.innerHTML += `
+                <tr>
+                    <td>${data.name}</td>
+                    <td>${data.handle}</td>
+                    <td><input type="text" id="ref-${d.id}" placeholder="e.g. JORDAN10" style="width:120px; margin:0;"></td>
+                    <td><button class="approve-btn" onclick="window.approvePartner('${d.id}')">Approve</button></td>
+                </tr>
+            `;
+        });
+    }
+
+    window.approvePartner = async (id) => {
+        const code = document.getElementById(`ref-${id}`).value;
+        if(!code) return alert("Please assign a RefCode!");
+        await updateDoc(doc(db, "partners", id), { status: "approved", refCode: code });
+        alert("Approved!");
+        loadPartners();
+    };
+
+    async function loadSales() {
+        const snap = await getDocs(collection(db, "conversions"));
+        const stats = {};
+        snap.forEach(d => {
+            const data = d.data();
+            if(!stats[data.partnerID]) stats[data.partnerID] = { count: 0, revenue: 0, owed: 0 };
+            stats[data.partnerID].count++;
+            stats[data.partnerID].revenue += data.amount;
+            stats[data.partnerID].owed += data.commission;
+        });
+
+        const list = document.getElementById('sales-list');
+        list.innerHTML = "";
+        for (const [id, data] of Object.entries(stats)) {
+            list.innerHTML += `<tr><td>${id}</td><td>${data.count}</td><td>$${data.revenue.toFixed(2)}</td><td>$${data.owed.toFixed(2)}</td></tr>`;
+        }
+    }
+</script>
+
+</body>
+</html>
