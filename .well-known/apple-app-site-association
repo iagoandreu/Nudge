@@ -1,0 +1,10 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["TEAMID.erv.Nudge"],
+        "components": [ { "/": "*", "comment": "Matches any URL" } ]
+      }
+    ]
+  }
+}
