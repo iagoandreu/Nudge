@@ -7,17 +7,18 @@
     <style>
         :root { --primary: rgb(219, 230, 185); --bg: #1a1a1d; --card: #2c2a3a; --text: #e0e0e0; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 20px; }
-        .container { max-width: 900px; margin: 0 auto; }
-        .card { background: var(--card); padding: 25px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        h1, h2 { color: var(--primary); }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .card { background: var(--card); padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        h1, h2 { color: var(--primary); margin-top: 0; }
         input { padding: 10px; border-radius: 5px; border: 1px solid #444; background: #1d2b38; color: white; margin-bottom: 10px; width: 100%; box-sizing: border-box; }
         button { background: var(--primary); color: #1a1a1d; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         button:hover { opacity: 0.8; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid #444; }
+        th { color: var(--primary); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
         .hidden { display: none; }
-        .approve-btn { background: #4CAF50; color: white; padding: 5px 10px; font-size: 0.8rem; }
-        .forgot-link { color: var(--primary); font-size: 0.8rem; cursor: pointer; text-decoration: underline; display: block; margin-top: 10px; }
+        .approve-btn { background: #4CAF50; color: white; padding: 6px 12px; border-radius: 4px; }
+        .status-tag { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; background: #444; }
     </style>
 </head>
 <body>
@@ -28,27 +29,34 @@
         <input type="email" id="login-email" placeholder="Email">
         <input type="password" id="login-password" placeholder="Password">
         <button id="login-btn">Login</button>
-        <span class="forgot-link" id="reset-btn">Forgot Password?</span>
     </div>
 
     <div id="dashboard-view" class="hidden">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h1>Dashboard</h1>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1>Nudge Command Center</h1>
             <button id="logout-btn" style="background: #ff4d4d; color: white;">Logout</button>
         </div>
 
         <div class="card">
-            <h2>Pending Partners</h2>
+            <h2>Pending Applications</h2>
             <table id="partners-table">
-                <thead><tr><th>Name</th><th>Handle</th><th>RefCode to Assign</th><th>Action</th></tr></thead>
+                <thead><tr><th>Name</th><th>Email</th><th>Handle</th><th>Assign RefCode</th><th>Action</th></tr></thead>
                 <tbody id="partners-list"></tbody>
             </table>
         </div>
 
         <div class="card">
-            <h2>Monthly Sales Report</h2>
-            <table id="sales-table">
-                <thead><tr><th>Partner ID</th><th>Sales Count</th><th>Total Revenue</th><th>Commission Owed</th></tr></thead>
+            <h2>Approved Partners</h2>
+            <table>
+                <thead><tr><th>Name</th><th>Email</th><th>Handle</th><th>Active Code</th></tr></thead>
+                <tbody id="approved-list"></tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>Live Sales & Commissions</h2>
+            <table>
+                <thead><tr><th>Partner ID</th><th>Total Sales</th><th>Revenue</th><th>Owed (Commission)</th></tr></thead>
                 <tbody id="sales-list"></tbody>
             </table>
         </div>
@@ -57,24 +65,23 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs, updateDoc, doc, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // PASTE YOUR CONFIG HERE
+    // --- PASTE YOUR CONFIG HERE ---
     const firebaseConfig = {
-        apiKey: "AIzaSyA4js7qXmL1EjK1x6Zqyw63rU4RoBmyhnQ",
-        authDomain: "nudge-alarm-backend.firebaseapp.com",
-        projectId: "nudge-alarm-backend",
-        storageBucket: "nudge-alarm-backend.firebasestorage.app",
-        messagingSenderId: "212653565147",
-        appId: "1:212653565147:web:5b53f8b444e28af26b58fe"
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_PROJECT.appspot.com",
+        messagingSenderId: "...",
+        appId: "..."
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // --- AUTH LOGIC ---
     onAuthStateChanged(auth, (user) => {
         if (user) {
             document.getElementById('login-view').classList.add('hidden');
@@ -89,65 +96,88 @@
     document.getElementById('login-btn').onclick = () => {
         const email = document.getElementById('login-email').value;
         const pass = document.getElementById('login-password').value;
-        signInWithEmailAndPassword(auth, email, pass).catch(e => alert(e.message));
+        signInWithEmailAndPassword(auth, email, pass).catch(e => alert("Login Failed: " + e.message));
     };
 
     document.getElementById('logout-btn').onclick = () => signOut(auth);
 
-    document.getElementById('reset-btn').onclick = () => {
-        const email = document.getElementById('login-email').value;
-        if(!email) return alert("Enter email first");
-        sendPasswordResetEmail(auth, email).then(() => alert("Reset email sent!")).catch(e => alert(e.message));
-    };
-
-    // --- DASHBOARD LOGIC ---
     async function loadDashboard() {
-        loadPartners();
+        loadPending();
+        loadApproved();
         loadSales();
     }
 
-    async function loadPartners() {
+    // LOAD PENDING
+    async function loadPending() {
         const q = query(collection(db, "partners"), where("status", "==", "pending"));
         const snap = await getDocs(q);
         const list = document.getElementById('partners-list');
-        list.innerHTML = "";
+        list.innerHTML = snap.empty ? "<tr><td colspan='5'>No pending apps.</td></tr>" : "";
         
         snap.forEach((d) => {
             const data = d.data();
             list.innerHTML += `
                 <tr>
                     <td>${data.name}</td>
+                    <td>${data.email || 'N/A'}</td>
                     <td>${data.handle}</td>
-                    <td><input type="text" id="ref-${d.id}" placeholder="e.g. JORDAN10" style="width:120px; margin:0;"></td>
+                    <td><input type="text" id="ref-${d.id}" placeholder="e.g. TEST20" style="width:120px; margin:0;"></td>
                     <td><button class="approve-btn" onclick="window.approvePartner('${d.id}')">Approve</button></td>
                 </tr>
             `;
         });
     }
 
+    // LOAD APPROVED HISTORY
+    async function loadApproved() {
+        const q = query(collection(db, "partners"), where("status", "==", "approved"));
+        const snap = await getDocs(q);
+        const list = document.getElementById('approved-list');
+        list.innerHTML = snap.empty ? "<tr><td colspan='4'>No approved partners yet.</td></tr>" : "";
+        
+        snap.forEach((d) => {
+            const data = d.data();
+            list.innerHTML += `
+                <tr>
+                    <td>${data.name}</td>
+                    <td>${data.email || 'N/A'}</td>
+                    <td>${data.handle}</td>
+                    <td><span class="status-tag" style="color:var(--primary)">${data.refCode}</span></td>
+                </tr>
+            `;
+        });
+    }
+
     window.approvePartner = async (id) => {
-        const code = document.getElementById(`ref-${id}`).value;
+        const code = document.getElementById(`ref-${id}`).value.toUpperCase();
         if(!code) return alert("Please assign a RefCode!");
-        await updateDoc(doc(db, "partners", id), { status: "approved", refCode: code });
-        alert("Approved!");
-        loadPartners();
+        try {
+            await updateDoc(doc(db, "partners", id), { status: "approved", refCode: code });
+            alert("Partner Approved!");
+            loadDashboard();
+        } catch (e) { alert(e.message); }
     };
 
+    // LOAD SALES
     async function loadSales() {
         const snap = await getDocs(collection(db, "conversions"));
         const stats = {};
+        
         snap.forEach(d => {
             const data = d.data();
-            if(!stats[data.partnerID]) stats[data.partnerID] = { count: 0, revenue: 0, owed: 0 };
-            stats[data.partnerID].count++;
-            stats[data.partnerID].revenue += data.amount;
-            stats[data.partnerID].owed += data.commission;
+            const pID = data.partnerID || "Unknown / Direct Sale";
+            if(!stats[pID]) stats[pID] = { count: 0, revenue: 0, owed: 0 };
+            stats[pID].count++;
+            stats[pID].revenue += data.amount;
+            stats[pID].owed += data.commission;
         });
 
         const list = document.getElementById('sales-list');
-        list.innerHTML = "";
+        list.innerHTML = Object.keys(stats).length === 0 ? "<tr><td colspan='4'>No sales recorded.</td></tr>" : "";
+        
         for (const [id, data] of Object.entries(stats)) {
-            list.innerHTML += `<tr><td>${id}</td><td>${data.count}</td><td>$${data.revenue.toFixed(2)}</td><td>$${data.owed.toFixed(2)}</td></tr>`;
+            const rowColor = id.includes("Unknown") ? "style='color:#888; font-style:italic;'" : "";
+            list.innerHTML += `<tr ${rowColor}><td>${id}</td><td>${data.count}</td><td>$${data.revenue.toFixed(2)}</td><td>$${data.owed.toFixed(2)}</td></tr>`;
         }
     }
 </script>
