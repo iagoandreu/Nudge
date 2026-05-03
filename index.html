@@ -264,46 +264,62 @@
     </script>
 
     <script>
-        // --- REFERRAL CODE LOGIC ---
         function handleReferral() {
             const urlParams = new URLSearchParams(window.location.search);
             const refCode = urlParams.get('ref');
     
             if (refCode) {
-                // 1. Save it to local storage just in case they refresh
-                localStorage.setItem('pending_nudge_ref', refCode);
+                const upperCode = refCode.toUpperCase();
+                localStorage.setItem('pending_nudge_ref', upperCode);
                 
-                // 2. Create a notification banner
                 const banner = document.createElement('div');
+                // Use your site's primary accent color (the light green-yellow)
                 banner.style.cssText = `
                     position: fixed;
-                    bottom: 20px;
+                    bottom: 30px;
                     left: 50%;
                     transform: translateX(-50%);
-                    background: var(--primary-accent);
-                    color: #1a1a1d;
-                    padding: 15px 25px;
-                    border-radius: 50px;
-                    font-weight: bold;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                    background: #2c2a3a;
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: 16px;
+                    font-weight: 500;
+                    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
                     z-index: 10000;
                     display: flex;
                     align-items: center;
-                    gap: 10px;
-                    border: 2px solid white;
+                    gap: 12px;
+                    border: 1px solid var(--primary-accent);
+                    width: 90%;
+                    max-width: 400px;
+                    font-size: 0.95rem;
                 `;
+    
                 banner.innerHTML = `
-                    <span>🎁 Code <strong>${refCode.toUpperCase()}</strong> detected!</span>
-                    <button onclick="this.parentElement.remove()" style="background:none; border:none; cursor:pointer; font-size:20px;">×</button>
+                    <span style="font-size: 1.2rem;">🚀</span>
+                    <div style="flex-grow: 1;">
+                        Supporting <strong>${upperCode}</strong>? <br>
+                        <span style="font-size: 0.8rem; color: #bbb;">Enter this code in the app to link your account.</span>
+                    </div>
+                    <button id="copyRefBtn" style="background: var(--primary-accent); border: none; color: #1a1a1d; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.8rem;">
+                        Copy
+                    </button>
                 `;
+    
                 document.body.appendChild(banner);
     
-                // 3. Optional: Auto-copy to clipboard
-                // navigator.clipboard.writeText(refCode); 
+                // Copy logic for the button
+                document.getElementById('copyRefBtn').onclick = function() {
+                    navigator.clipboard.writeText(upperCode);
+                    this.innerText = "Copied!";
+                    this.style.background = "#fff";
+                    setTimeout(() => {
+                        this.innerText = "Copy";
+                        this.style.background = "var(--primary-accent)";
+                    }, 2000);
+                };
             }
         }
-    
-        // Run on load
         window.addEventListener('DOMContentLoaded', handleReferral);
     </script>
 </body>
