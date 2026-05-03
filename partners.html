@@ -55,16 +55,16 @@
         const btn = document.getElementById('submitBtn');
         btn.innerText = "Sending...";
         btn.disabled = true;
-
+    
         try {
             await addDoc(collection(db, "partners"), {
                 name: document.getElementById('name').value,
                 handle: document.getElementById('handle').value,
-                paypalEmail: document.getElementById('paypal').value,
-                status: "pending", // Default status
-                dateApplied: serverTimestamp() // Default timestamp
+                email: document.getElementById('paypal').value, // Changed to 'email' for dashboard compatibility
+                status: "pending", 
+                dateApplied: serverTimestamp() 
             });
-
+    
             document.getElementById('form-content').style.display = 'none';
             document.getElementById('success').style.display = 'block';
         } catch (error) {
