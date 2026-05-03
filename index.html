@@ -262,5 +262,49 @@
         const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
         elementsToAnimate.forEach(el => observer.observe(el));
     </script>
+
+    <script>
+        // --- REFERRAL CODE LOGIC ---
+        function handleReferral() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref');
+    
+            if (refCode) {
+                // 1. Save it to local storage just in case they refresh
+                localStorage.setItem('pending_nudge_ref', refCode);
+                
+                // 2. Create a notification banner
+                const banner = document.createElement('div');
+                banner.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: var(--primary-accent);
+                    color: #1a1a1d;
+                    padding: 15px 25px;
+                    border-radius: 50px;
+                    font-weight: bold;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                    z-index: 10000;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    border: 2px solid white;
+                `;
+                banner.innerHTML = `
+                    <span>🎁 Code <strong>${refCode.toUpperCase()}</strong> detected!</span>
+                    <button onclick="this.parentElement.remove()" style="background:none; border:none; cursor:pointer; font-size:20px;">×</button>
+                `;
+                document.body.appendChild(banner);
+    
+                // 3. Optional: Auto-copy to clipboard
+                // navigator.clipboard.writeText(refCode); 
+            }
+        }
+    
+        // Run on load
+        window.addEventListener('DOMContentLoaded', handleReferral);
+    </script>
 </body>
 </html>
