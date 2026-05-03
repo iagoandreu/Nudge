@@ -137,12 +137,18 @@
         
         snap.forEach((d) => {
             const data = d.data();
+            // Generate the exact link to give the influencer
+            const shareLink = `https://iagoandreu.github.io/Nudge/?ref=${data.refCode}`; 
+            
             list.innerHTML += `
                 <tr>
                     <td>${data.name}</td>
                     <td>${data.email || 'N/A'}</td>
-                    <td>${data.handle}</td>
                     <td><span class="status-tag" style="color:var(--primary)">${data.refCode}</span></td>
+                    <td>
+                        <input type="text" value="${shareLink}" readonly style="width: 250px; margin-bottom: 0; font-size: 0.8rem; background: #111;">
+                        <button onclick="navigator.clipboard.writeText('${shareLink}'); alert('Link Copied!')" style="padding: 8px; margin-left: 5px; font-size: 0.8rem;">Copy</button>
+                    </td>
                 </tr>
             `;
         });
