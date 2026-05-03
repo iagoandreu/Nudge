@@ -2,7 +2,7 @@
   "applinks": {
     "details": [
       {
-        "appIDs": ["TEAMID.erv.Nudge"],
+        "appIDs": ["5NXQB7L2S9.erv.Nudge"],
         "components": [ { "/": "*", "comment": "Matches any URL" } ]
       }
     ]
