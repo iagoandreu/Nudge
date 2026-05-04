@@ -12,7 +12,6 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="images/AppIconNudge.png">
 
-    <!-- Google Fonts for premium typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -167,7 +166,6 @@
         </header>
 
         <main>
-            <!-- Feature Cards Section -->
             <div class="feature-card animate-on-scroll">
                 <div class="feature-text">
                     <h2>A Cognitive Handshake</h2>
@@ -205,7 +203,6 @@
                 </div>
             </div>
 
-            <!-- FAQ Section for AEO -->
             <section class="faq-section animate-on-scroll">
                 <h2>Answering the Important Questions</h2>
                 <details>
@@ -273,8 +270,9 @@
                 localStorage.setItem('pending_nudge_ref', upperCode);
                 
                 const banner = document.createElement('div');
-                // Use your site's primary accent color (the light green-yellow)
+                // Added box-sizing to ensure padding doesn't break the 90% width on iPhones
                 banner.style.cssText = `
+                    box-sizing: border-box;
                     position: fixed;
                     bottom: 30px;
                     left: 50%;
@@ -296,12 +294,12 @@
                 `;
     
                 banner.innerHTML = `
-                    <span style="font-size: 1.2rem;">🚀</span>
+                    <span style="font-size: 1.4rem; padding: 4px; background: rgba(0,0,0,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">🚀</span>
                     <div style="flex-grow: 1;">
                         Supporting <strong>${upperCode}</strong>? <br>
-                        <span style="font-size: 0.8rem; color: #bbb;">Enter this code in the app to link your account.</span>
+                        <span style="font-size: 0.8rem; color: #bbb;">Enter code in app to link.</span>
                     </div>
-                    <button id="copyRefBtn" style="background: var(--primary-accent); border: none; color: #1a1a1d; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.8rem;">
+                    <button id="copyRefBtn" style="background: var(--primary-accent); border: none; color: #1a1a1d; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem;">
                         Copy
                     </button>
                 `;
