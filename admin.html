@@ -54,7 +54,10 @@
         </div>
 
         <div class="card">
-            <h2>Live Sales & Commissions</h2>
+            <div style="display: flex; justify-content: space-between;">
+                <h2>Live Sales & Commissions</h2>
+                <button onclick="window.downloadCSV()" style="background: #444; color: white; padding: 5px 15px; font-size: 0.8rem;">Export CSV</button>
+            </div>
             <table>
                 <thead><tr><th>Partner ID</th><th>Total Sales</th><th>Revenue</th><th>Owed (Commission)</th></tr></thead>
                 <tbody id="sales-list"></tbody>
@@ -68,19 +71,20 @@
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, collection, query, where, getDocs, updateDoc, doc, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    // --- PASTE YOUR CONFIG HERE ---
     const firebaseConfig = {
-          apiKey: "AIzaSyA4js7qXmL1EjK1x6Zqyw63rU4RoBmyhnQ",
-          authDomain: "nudge-alarm-backend.firebaseapp.com",
-          projectId: "nudge-alarm-backend",
-          storageBucket: "nudge-alarm-backend.firebasestorage.app",
-          messagingSenderId: "212653565147",
-          appId: "1:212653565147:web:5b53f8b444e28af26b58fe"
+        apiKey: "AIzaSyA4js7qXmL1EjK1x6Zqyw63rU4RoBmyhnQ",
+        authDomain: "nudge-alarm-backend.firebaseapp.com",
+        projectId: "nudge-alarm-backend",
+        storageBucket: "nudge-alarm-backend.firebasestorage.app",
+        messagingSenderId: "212653565147",
+        appId: "1:212653565147:web:5b53f8b444e28af26b58fe"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+
+    let allConversions = []; // Global store for CSV export
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -154,38 +158,110 @@
         });
     }
 
-    window.approvePartner = async (id) => {
-        const code = document.getElementById(`ref-${id}`).value.toUpperCase();
-        if(!code) return alert("Please assign a RefCode!");
-        try {
-            await updateDoc(doc(db, "partners", id), { status: "approved", refCode: code });
-            alert("Partner Approved!");
-            loadDashboard();
-        } catch (e) { alert(e.message); }
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs, updateDoc, doc, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA4js7qXmL1EjK1x6Zqyw63rU4RoBmyhnQ",
+        authDomain: "nudge-alarm-backend.firebaseapp.com",
+        projectId: "nudge-alarm-backend",
+        storageBucket: "nudge-alarm-backend.firebasestorage.app",
+        messagingSenderId: "212653565147",
+        appId: "1:212653565147:web:5b53f8b444e28af26b58fe"
     };
 
-    // LOAD SALES
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let allConversions = []; // Global store for CSV export
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.getElementById('login-view').classList.add('hidden');
+            document.getElementById('dashboard-view').classList.remove('hidden');
+            loadDashboard();
+        } else {
+            document.getElementById('login-view').classList.remove('hidden');
+            document.getElementById('dashboard-view').classList.add('hidden');
+        }
+    });
+
+    document.getElementById('login-btn').onclick = () => {
+        const email = document.getElementById('login-email').value;
+        const pass = document.getElementById('login-password').value;
+        signInWithEmailAndPassword(auth, email, pass).catch(e => alert("Login Failed: " + e.message));
+    };
+
+    document.getElementById('logout-btn').onclick = () => signOut(auth);
+
+    async function loadDashboard() {
+        loadPending();
+        loadApproved();
+        loadSales();
+    }
+
     async function loadSales() {
-        const snap = await getDocs(collection(db, "conversions"));
+        // Added orderBy to get newest first
+        const q = query(collection(db, "conversions"), orderBy("timestamp", "desc"));
+        const snap = await getDocs(q);
         const stats = {};
+        allConversions = []; // Reset global store
+        
+        const list = document.getElementById('sales-list');
+        list.innerHTML = "";
         
         snap.forEach(d => {
             const data = d.data();
-            const pID = data.partnerID || "Unknown / Direct Sale";
+            const pID = data.partnerID || "Direct Sale";
+            
+            // Format timestamp for display
+            const date = data.timestamp ? data.timestamp.toDate().toLocaleString() : "N/A";
+            
+            // Store for CSV
+            allConversions.push({
+                date: date,
+                partner: pID,
+                amount: data.amount,
+                commission: data.commission
+            });
+
+            // Aggregate stats for the top table
             if(!stats[pID]) stats[pID] = { count: 0, revenue: 0, owed: 0 };
             stats[pID].count++;
             stats[pID].revenue += data.amount;
             stats[pID].owed += data.commission;
+
+            // Optional: Append to a "Recent Transactions" table if you add one to HTML
+            // list.innerHTML += `<tr><td>${date}</td><td>${pID}</td><td>$${data.amount}</td></tr>`;
         });
 
-        const list = document.getElementById('sales-list');
-        list.innerHTML = Object.keys(stats).length === 0 ? "<tr><td colspan='4'>No sales recorded.</td></tr>" : "";
-        
+        // Display aggregated Partner totals
         for (const [id, data] of Object.entries(stats)) {
-            const rowColor = id.includes("Unknown") ? "style='color:#888; font-style:italic;'" : "";
-            list.innerHTML += `<tr ${rowColor}><td>${id}</td><td>${data.count}</td><td>$${data.revenue.toFixed(2)}</td><td>$${data.owed.toFixed(2)}</td></tr>`;
+            list.innerHTML += `<tr><td>${id}</td><td>${data.count}</td><td>$${data.revenue.toFixed(2)}</td><td>$${data.owed.toFixed(2)}</td></tr>`;
         }
     }
+
+    // CSV EXPORT FUNCTION
+    window.downloadCSV = () => {
+        if (allConversions.length === 0) return alert("No data to export!");
+        
+        let csvContent = "data:text/csv;charset=utf-8,Date,PartnerID,Amount,Commission\n";
+        
+        allConversions.forEach(row => {
+            csvContent += `${row.date},${row.partner},${row.amount},${row.commission}\n`;
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `Nudge_Sales_${new Date().toLocaleDateString()}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 </script>
 
 </body>
