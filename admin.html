@@ -39,8 +39,8 @@
 
         <div class="card">
             <h2>Pending Applications</h2>
-            <table id="partners-table">
-                <thead><tr><th>Name</th><th>Email</th><th>Active Code</th><th>Shareable Link</th></tr></thead>
+            <table>
+                <thead><tr><th>Name</th><th>Email</th><th>Handle</th><th>RefCode</th><th>Action</th></tr></thead>
                 <tbody id="partners-list"></tbody>
             </table>
         </div>
@@ -48,15 +48,15 @@
         <div class="card">
             <h2>Approved Partners</h2>
             <table>
-                <thead><tr><th>Name</th><th>Email</th><th>Handle</th><th>Active Code</th></tr></thead>
+                <thead><tr><th>Name</th><th>Email</th><th>Active Code</th><th>Shareable Link</th></tr></thead>
                 <tbody id="approved-list"></tbody>
             </table>
         </div>
 
         <div class="card">
-            <div style="display: flex; justify-content: space-between;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
                 <h2>Live Sales & Commissions</h2>
-                <button onclick="window.downloadCSV()" style="background: #444; color: white; padding: 5px 15px; font-size: 0.8rem;">Export CSV</button>
+                <button id="export-btn" style="background: #444; color: white; padding: 5px 15px; font-size: 0.8rem;">Export CSV</button>
             </div>
             <table>
                 <thead><tr><th>Partner ID</th><th>Total Sales</th><th>Revenue</th><th>Owed (Commission)</th></tr></thead>
@@ -84,7 +84,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    let allConversions = []; // Global store for CSV export
+    let allConversions = [];
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -111,13 +111,11 @@
         loadSales();
     }
 
-    // LOAD PENDING
     async function loadPending() {
         const q = query(collection(db, "partners"), where("status", "==", "pending"));
         const snap = await getDocs(q);
         const list = document.getElementById('partners-list');
         list.innerHTML = snap.empty ? "<tr><td colspan='5'>No pending apps.</td></tr>" : "";
-        
         snap.forEach((d) => {
             const data = d.data();
             list.innerHTML += `
@@ -125,142 +123,79 @@
                     <td>${data.name}</td>
                     <td>${data.email || 'N/A'}</td>
                     <td>${data.handle}</td>
-                    <td><input type="text" id="ref-${d.id}" placeholder="e.g. TEST20" style="width:120px; margin:0;"></td>
-                    <td><button class="approve-btn" onclick="window.approvePartner('${d.id}')">Approve</button></td>
-                </tr>
-            `;
+                    <td><input type="text" id="ref-${d.id}" placeholder="CODE" style="width:100px; margin:0;"></td>
+                    <td><button class="approve-btn" onclick="approvePartner('${d.id}')">Approve</button></td>
+                </tr>`;
         });
     }
 
-    // LOAD APPROVED HISTORY
     async function loadApproved() {
         const q = query(collection(db, "partners"), where("status", "==", "approved"));
         const snap = await getDocs(q);
         const list = document.getElementById('approved-list');
-        list.innerHTML = snap.empty ? "<tr><td colspan='4'>No approved partners yet.</td></tr>" : "";
-        
+        list.innerHTML = snap.empty ? "<tr><td colspan='4'>No approved partners.</td></tr>" : "";
         snap.forEach((d) => {
             const data = d.data();
-            // Generate the exact link to give the influencer
-            const shareLink = `https://iagoandreu.github.io/Nudge/?ref=${data.refCode}`; 
-            
+            const shareLink = `https://iagoandreu.github.io/Nudge/?ref=${data.refCode}`;
             list.innerHTML += `
                 <tr>
                     <td>${data.name}</td>
                     <td>${data.email || 'N/A'}</td>
                     <td><span class="status-tag" style="color:var(--primary)">${data.refCode}</span></td>
                     <td>
-                        <input type="text" value="${shareLink}" readonly style="width: 250px; margin-bottom: 0; font-size: 0.8rem; background: #111;">
-                        <button onclick="navigator.clipboard.writeText('${shareLink}'); alert('Link Copied!')" style="padding: 8px; margin-left: 5px; font-size: 0.8rem;">Copy</button>
+                        <input type="text" value="${shareLink}" readonly style="width: 200px; margin: 0; background: #111;">
+                        <button onclick="navigator.clipboard.writeText('${shareLink}'); alert('Copied!')" style="padding: 5px;">Copy</button>
                     </td>
-                </tr>
-            `;
+                </tr>`;
         });
     }
 
-    <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, collection, query, where, getDocs, updateDoc, doc, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyA4js7qXmL1EjK1x6Zqyw63rU4RoBmyhnQ",
-        authDomain: "nudge-alarm-backend.firebaseapp.com",
-        projectId: "nudge-alarm-backend",
-        storageBucket: "nudge-alarm-backend.firebasestorage.app",
-        messagingSenderId: "212653565147",
-        appId: "1:212653565147:web:5b53f8b444e28af26b58fe"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    let allConversions = []; // Global store for CSV export
-
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            document.getElementById('login-view').classList.add('hidden');
-            document.getElementById('dashboard-view').classList.remove('hidden');
-            loadDashboard();
-        } else {
-            document.getElementById('login-view').classList.remove('hidden');
-            document.getElementById('dashboard-view').classList.add('hidden');
-        }
-    });
-
-    document.getElementById('login-btn').onclick = () => {
-        const email = document.getElementById('login-email').value;
-        const pass = document.getElementById('login-password').value;
-        signInWithEmailAndPassword(auth, email, pass).catch(e => alert("Login Failed: " + e.message));
-    };
-
-    document.getElementById('logout-btn').onclick = () => signOut(auth);
-
-    async function loadDashboard() {
-        loadPending();
-        loadApproved();
-        loadSales();
-    }
-
     async function loadSales() {
-        // Added orderBy to get newest first
         const q = query(collection(db, "conversions"), orderBy("timestamp", "desc"));
         const snap = await getDocs(q);
         const stats = {};
-        allConversions = []; // Reset global store
-        
-        const list = document.getElementById('sales-list');
-        list.innerHTML = "";
+        allConversions = [];
         
         snap.forEach(d => {
             const data = d.data();
             const pID = data.partnerID || "Direct Sale";
-            
-            // Format timestamp for display
             const date = data.timestamp ? data.timestamp.toDate().toLocaleString() : "N/A";
             
-            // Store for CSV
-            allConversions.push({
-                date: date,
-                partner: pID,
-                amount: data.amount,
-                commission: data.commission
-            });
+            allConversions.push({ date, partner: pID, amount: data.amount, commission: data.commission });
 
-            // Aggregate stats for the top table
             if(!stats[pID]) stats[pID] = { count: 0, revenue: 0, owed: 0 };
             stats[pID].count++;
             stats[pID].revenue += data.amount;
             stats[pID].owed += data.commission;
-
-            // Optional: Append to a "Recent Transactions" table if you add one to HTML
-            // list.innerHTML += `<tr><td>${date}</td><td>${pID}</td><td>$${data.amount}</td></tr>`;
         });
 
-        // Display aggregated Partner totals
+        const list = document.getElementById('sales-list');
+        list.innerHTML = Object.keys(stats).length === 0 ? "<tr><td colspan='4'>No sales.</td></tr>" : "";
         for (const [id, data] of Object.entries(stats)) {
             list.innerHTML += `<tr><td>${id}</td><td>${data.count}</td><td>$${data.revenue.toFixed(2)}</td><td>$${data.owed.toFixed(2)}</td></tr>`;
         }
     }
 
-    // CSV EXPORT FUNCTION
-    window.downloadCSV = () => {
-        if (allConversions.length === 0) return alert("No data to export!");
-        
-        let csvContent = "data:text/csv;charset=utf-8,Date,PartnerID,Amount,Commission\n";
-        
-        allConversions.forEach(row => {
-            csvContent += `${row.date},${row.partner},${row.amount},${row.commission}\n`;
-        });
+    window.approvePartner = async (id) => {
+        const code = document.getElementById(`ref-${id}`).value.toUpperCase();
+        if(!code) return alert("Assign a code!");
+        try {
+            await updateDoc(doc(db, "partners", id), { status: "approved", refCode: code });
+            alert("Approved!");
+            loadDashboard();
+        } catch (e) { alert(e.message); }
+    };
 
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `Nudge_Sales_${new Date().toLocaleDateString()}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    document.getElementById('export-btn').onclick = () => {
+        if (allConversions.length === 0) return alert("No data!");
+        let csv = "Date,PartnerID,Amount,Commission\n";
+        allConversions.forEach(r => csv += `${r.date},${r.partner},${r.amount},${r.commission}\n`);
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'Nudge_Sales.csv');
+        a.click();
     };
 </script>
 
